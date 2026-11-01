@@ -219,8 +219,8 @@ export function StaffDirectoryView({
                 No staff member currently assigned to this responsibility.
               </p>
               <p className="text-xs text-stone-600 mt-1 max-w-md mx-auto">
-                Please contact the Head of the Computer Centre directly at{' '}
-                <code className="font-tabular text-[#0D1B2A]">head_cc@iisermohali.ac.in</code>.
+                Please contact the Faculty In-Charge (Head CC) directly at{' '}
+                <code className="font-tabular text-[#0D1B2A]">headcc@iisermohali.ac.in</code>.
               </p>
             </div>
           ) : (

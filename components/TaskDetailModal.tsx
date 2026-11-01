@@ -86,7 +86,7 @@ export function TaskDetailModal({
               </p>
               <p className="text-stone-600">
                 Direct escalation:{' '}
-                <code className="font-tabular font-semibold">head_cc@iisermohali.ac.in</code>
+                <code className="font-tabular font-semibold">headcc@iisermohali.ac.in</code>
               </p>
             </div>
           ) : (

@@ -48,18 +48,20 @@ export async function POST(req: NextRequest) {
       }
 
       const role = resolveUserRole(cleanEmail);
-      const isHead = cleanEmail === DEFAULT_HEAD_CC_EMAIL;
+      const isHead =
+        cleanEmail === DEFAULT_HEAD_CC_EMAIL ||
+        cleanEmail === 'head_cc@iisermohali.ac.in';
 
       sessionUser = {
         id: `user_${Date.now()}_${Math.random().toString(36).substring(7)}`,
         email: cleanEmail,
         name: isHead
-          ? 'Prof. K. R. Sharma (Head, Computer Centre)'
+          ? 'Dr. Satyajit Jena (Head, Computer Centre)'
           : formatNameFromEmail(cleanEmail),
         role,
         authMethod: authType === 'sso' ? 'sso_simulation' : 'institutional_demo',
         designation: isHead
-          ? 'Head, Computer Centre & Professor'
+          ? 'Faculty In-Charge, Computer Centre & Associate Professor'
           : 'IISER Mohali Member',
         department: isHead
           ? 'Computer Centre / Dept. of Physical Sciences'

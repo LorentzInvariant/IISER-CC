@@ -59,19 +59,19 @@ export function CampusHero({
                 <span>Informatics Centre, Sector 81</span>
               </div>
 
-              <h1 className="font-editorial text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-[#0D1B2A] leading-[1.15] tracking-tight">
-                Computer Centre Directory &amp; Operational Roster
+              <h1 className="font-editorial text-3xl sm:text-4xl lg:text-[2.65rem] font-bold text-[#0D1B2A] leading-[1.15] tracking-tight">
+                Computer Centre · Staff Directory &amp; Service Desk
               </h1>
             </div>
 
-            <p className="text-base text-stone-700 leading-relaxed max-w-2xl">
-              Official internal register of Computer Centre personnel, technical responsibilities,
-              daily duty schedules, and escalation contacts for campus network, supercomputing
-              clusters, and instructional laboratories.
+            <p className="text-sm sm:text-base text-stone-700 leading-relaxed max-w-2xl">
+              Official directory of IISER Mohali Computer Centre personnel, technical divisions, and
+              weekly duty schedules. Locate the designated staff member for Campus Network, Google
+              Workspace, eSmarth ERP, Moodle LMS, KOHA/DSpace, Data Center (HPC), or Teaching Labs.
             </p>
 
             {/* Formal Institutional Search Bar */}
-            <div className="pt-2 max-w-2xl">
+            <div className="pt-1 max-w-2xl">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -85,7 +85,7 @@ export function CampusHero({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    placeholder="Find staff or service by keyword (e.g., Wi-Fi, Eduroam, HPC, Slurm, ERP, lab)..."
+                    placeholder="Search by service or staff name (e.g., Moodle, eSmarth, Google Workspace, Network, KOHA)..."
                     aria-label="Search for a task, service, staff member or responsibility"
                     className="w-full pl-3 pr-4 py-3 text-sm text-[#182026] placeholder-stone-500 focus:outline-none bg-transparent"
                   />
@@ -100,15 +100,16 @@ export function CampusHero({
 
               {/* Quiet Text Index Links (No Pill Enclosures) */}
               <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-stone-600">
-                <span className="font-semibold text-[#0D1B2A]">Direct index:</span>
+                <span className="font-semibold text-[#0D1B2A]">Quick filter:</span>
                 {[
-                  'Campus Wi-Fi',
-                  'Eduroam',
-                  'HPC Cluster',
-                  'Central Lab',
-                  'Email Services',
-                  'Smart Classroom',
-                  'Firewall & VPN',
+                  'Google Workspace',
+                  'Campus Network',
+                  'eSmarth ERP',
+                  'Moodle LMS',
+                  'KOHA & DSpace',
+                  'Cyber Security',
+                  'Website Updates',
+                  'Teaching Labs',
                 ].map((term, index, arr) => (
                   <React.Fragment key={term}>
                     <button
@@ -134,29 +135,29 @@ export function CampusHero({
             {/* Quiet Tabular Summary Ledger */}
             <div className="pt-4 border-t border-[#E5E2DC] grid grid-cols-3 gap-6 max-w-xl text-xs">
               <div>
-                <div className="text-stone-500">Active Personnel</div>
+                <div className="text-stone-500">CC Personnel</div>
                 <button
                   type="button"
                   onClick={() => onNavigateTab('directory')}
-                  className="mt-0.5 text-lg font-bold font-tabular text-[#0D1B2A] hover:text-[#9E3B24] transition-colors cursor-pointer"
+                  className="mt-0.5 text-base sm:text-lg font-bold font-tabular text-[#0D1B2A] hover:text-[#9E3B24] transition-colors cursor-pointer"
                 >
-                  {activeStaffCount} Officers
+                  {activeStaffCount} Staff Members
                 </button>
               </div>
               <div>
-                <div className="text-stone-500">Service Divisions</div>
+                <div className="text-stone-500">IT Divisions</div>
                 <button
                   type="button"
                   onClick={() => onNavigateTab('responsibilities')}
-                  className="mt-0.5 text-lg font-bold font-tabular text-[#0D1B2A] hover:text-[#9E3B24] transition-colors cursor-pointer"
+                  className="mt-0.5 text-base sm:text-lg font-bold font-tabular text-[#0D1B2A] hover:text-[#9E3B24] transition-colors cursor-pointer"
                 >
-                  {totalServicesCount} Divisions
+                  {totalServicesCount} Core Services
                 </button>
               </div>
               <div>
-                <div className="text-stone-500">Helpdesk Extension</div>
-                <div className="mt-0.5 text-lg font-bold font-tabular text-[#0D1B2A]">
-                  0172-229-1050
+                <div className="text-stone-500">Office Telefax</div>
+                <div className="mt-0.5 text-base sm:text-lg font-bold font-tabular text-[#0D1B2A]">
+                  0172-2240266
                 </div>
               </div>
             </div>

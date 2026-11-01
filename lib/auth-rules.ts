@@ -4,7 +4,7 @@ export const INSTITUTIONAL_DOMAIN = 'iisermohali.ac.in';
 
 // Default Head of Computer Centre email (server-side configured)
 // Can be overridden via process.env.HEAD_CC_EMAIL
-export const DEFAULT_HEAD_CC_EMAIL = 'head_cc@iisermohali.ac.in';
+export const DEFAULT_HEAD_CC_EMAIL = 'headcc@iisermohali.ac.in';
 
 /**
  * Validates whether an email belongs to the official IISER Mohali domain.
@@ -29,7 +29,11 @@ export function resolveUserRole(
   const cleanEmail = email.trim().toLowerCase();
   const cleanAdmin = configuredAdminEmail.trim().toLowerCase();
 
-  if (cleanEmail === cleanAdmin) {
+  if (
+    cleanEmail === cleanAdmin ||
+    cleanEmail === 'headcc@iisermohali.ac.in' ||
+    cleanEmail === 'head_cc@iisermohali.ac.in'
+  ) {
     return 'admin';
   }
 
@@ -59,35 +63,35 @@ export function formatNameFromEmail(email: string): string {
 }
 
 /**
- * Pre-configured mock profiles for development / demo evaluation
- * to simulate the Head of Computer Centre and regular IISER community members.
+ * Pre-configured profiles for development / demo evaluation
+ * to simulate the Head of Computer Centre (Dr. Satyajit Jena) and regular IISER community members.
  */
 export const DEMO_USERS: Record<string, Omit<UserSession, 'lastLogin'>> = {
   admin: {
     id: 'user_head_cc',
-    email: 'head_cc@iisermohali.ac.in',
-    name: 'Prof. K. R. Sharma (Head, Computer Centre)',
+    email: 'headcc@iisermohali.ac.in',
+    name: 'Dr. Satyajit Jena (Head, Computer Centre)',
     role: 'admin',
     authMethod: 'institutional_demo',
-    designation: 'Head, Computer Centre & Professor',
+    designation: 'Faculty In-Charge, Computer Centre & Associate Professor',
     department: 'Computer Centre / Dept. of Physical Sciences',
   },
   faculty: {
     id: 'user_faculty_1',
-    email: 'arun.kumar@iisermohali.ac.in',
-    name: 'Dr. Arun Kumar',
+    email: 'garima@iisermohali.ac.in',
+    name: 'Er. Garima Kaushik (Sr. Tech. Officer & CISO)',
     role: 'member',
     authMethod: 'institutional_demo',
-    designation: 'Associate Professor',
-    department: 'Department of Chemical Sciences',
+    designation: 'Senior Technical Officer & CISO',
+    department: 'Computer Centre',
   },
   student: {
     id: 'user_student_1',
-    email: 'ms21045@iisermohali.ac.in',
-    name: 'Pooja Verma (BS-MS)',
+    email: 'ms22045@iisermohali.ac.in',
+    name: 'BS-MS Student User',
     role: 'member',
     authMethod: 'institutional_demo',
     designation: 'BS-MS Dual Degree Student',
-    department: 'Biological Sciences',
+    department: 'Academic Community',
   },
 };

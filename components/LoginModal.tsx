@@ -65,7 +65,7 @@ export function LoginModal({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: 'head_cc@iisermohali.ac.in',
+          email: 'headcc@iisermohali.ac.in',
           authType: 'sso',
         }),
       });
@@ -194,10 +194,10 @@ export function LoginModal({
                     className="p-3 text-left bg-white border border-[#D8D5CD] hover:border-[#0D1B2A] transition-colors cursor-pointer"
                   >
                     <div className="text-xs font-bold text-[#0D1B2A]">
-                      Head of Computer Centre
+                      Dr. Satyajit Jena (Head, CC)
                     </div>
                     <div className="text-[11px] text-[#9E3B24] font-tabular mt-0.5">
-                      head_cc@iisermohali.ac.in
+                      headcc@iisermohali.ac.in
                     </div>
                     <div className="text-[11px] text-stone-600 mt-1">
                       Administrator — Add/edit staff, duties &amp; circulars
@@ -211,10 +211,10 @@ export function LoginModal({
                     className="p-3 text-left bg-white border border-[#D8D5CD] hover:border-[#0D1B2A] transition-colors cursor-pointer"
                   >
                     <div className="text-xs font-bold text-[#0D1B2A]">
-                      Regular Community Member
+                      Er. Garima Kaushik (Sr. Tech. Officer)
                     </div>
                     <div className="text-[11px] text-stone-600 font-tabular mt-0.5">
-                      arun.kumar@iisermohali.ac.in
+                      garima@iisermohali.ac.in
                     </div>
                     <div className="text-[11px] text-stone-600 mt-1">
                       Member — Read-only directory &amp; schedule access

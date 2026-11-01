@@ -248,9 +248,28 @@ export default function HomePage() {
     fetchData();
   }
 
-  // Head of Computer Centre profile
+  // Head of Computer Centre & Organized Staff Divisions
   const headStaff = staffList.find((s) => s.isHead);
-  const otherStaff = staffList.filter((s) => !s.isHead && s.status !== 'archived');
+  const activeRegularStaff = staffList.filter((s) => !s.isHead && s.status !== 'archived');
+
+  // Group staff logically so the directory is easy to scan and follow
+  const seniorOfficers = activeRegularStaff.filter(
+    (s) =>
+      s.designation.toLowerCase().includes('senior technical officer') ||
+      s.designation.toLowerCase().includes('ciso')
+  );
+  const technicalAssistants = activeRegularStaff.filter(
+    (s) =>
+      !seniorOfficers.some((o) => o.id === s.id) &&
+      s.designation.toLowerCase().includes('technical assistant')
+  );
+  const labAndSupportStaff = activeRegularStaff.filter(
+    (s) =>
+      !seniorOfficers.some((o) => o.id === s.id) &&
+      !technicalAssistants.some((t) => t.id === s.id)
+  );
+
+  const staffById = new Map(staffList.map((s) => [s.id, s]));
 
   const todayDay: DayOfWeek = (['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as DayOfWeek[])[new Date().getDay()];
 
@@ -283,8 +302,8 @@ export default function HomePage() {
       )}
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* TAB 1: Main Dashboard / Team Overview */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        {/* TAB 1: Main Dashboard / Organized Overview */}
         {currentTab === 'dashboard' && (
           <div className="space-y-12">
             {/* Official Circular Bulletin Strip */}
@@ -296,7 +315,7 @@ export default function HomePage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
                     <span className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
-                      Official Advisory · Circular No. CC/2026/01
+                      Official Notice · Computer Centre
                     </span>
                     <span className="text-[#D8D5CD]">|</span>
                     <span className="text-[11px] font-mono text-[#6E7781]">
@@ -311,24 +330,107 @@ export default function HomePage() {
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-[#0D1B2A] hover:text-[#9E3B24] flex items-center gap-1 shrink-0">
-                  Read Notice Register <ArrowRight className="w-3.5 h-3.5" />
+                  All Notices ({announcements.length}) <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
             )}
 
-            {/* Section 1: Head of Computer Centre (Distinct Profile at Top as mandated by Section 4.C) */}
+            {/* QUICK HELP GUIDE: Who to Contact for What at IISER Mohali */}
             <section className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between pb-3 border-b border-[#D8D5CD] gap-2">
                 <div>
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
-                    Section I · Leadership & Administrative Escalation
+                    Quick Service Guide · Who to Contact For What
                   </p>
                   <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
-                    Head of Computer Centre
+                    Campus IT Services &amp; Designated Contacts
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#4A5568] mt-0.5">
+                    Select any campus IT service below to view the assigned staff member, email address, and escalation procedure.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentTab('responsibilities')}
+                  className="text-xs font-semibold text-[#0D1B2A] hover:text-[#9E3B24] flex items-center gap-1 shrink-0 cursor-pointer"
+                >
+                  <span>Full Service Catalogue</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="bg-white border border-[#D8D5CD] overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[#E5E2DC]">
+                  {[0, 1].map((colIndex) => {
+                    const half = Math.ceil(responsibilities.length / 2);
+                    const colItems =
+                      colIndex === 0
+                        ? responsibilities.slice(0, half)
+                        : responsibilities.slice(half);
+                    return (
+                      <div key={colIndex} className="divide-y divide-[#E5E2DC]">
+                        {colItems.map((resp) => {
+                          const respDuties = duties.filter((d) => d.responsibilityId === resp.id);
+                          const assignedIds = Array.from(
+                            new Set(respDuties.map((d) => d.staffId))
+                          );
+                          const assignedStaff = assignedIds
+                            .map((id) => staffById.get(id))
+                            .filter((s): s is StaffMember => Boolean(s));
+
+                          return (
+                            <div
+                              key={resp.id}
+                              onClick={() => setSelectedTask(resp)}
+                              className="p-4 sm:px-5 sm:py-4 hover:bg-[#FAF9F5] transition-colors cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-2 group"
+                            >
+                              <div className="space-y-0.5 pr-2">
+                                <div className="text-[11px] font-mono text-[#9E3B24] font-medium">
+                                  {resp.category}
+                                </div>
+                                <h3 className="text-sm font-bold text-[#0D1B2A] group-hover:text-[#9E3B24] transition-colors">
+                                  {resp.title}
+                                </h3>
+                              </div>
+                              <div className="sm:text-right shrink-0 text-xs">
+                                {assignedStaff.length > 0 ? (
+                                  assignedStaff.slice(0, 2).map((st) => (
+                                    <div key={st.id} className="leading-snug">
+                                      <span className="font-semibold text-[#0D1B2A]">
+                                        {st.fullName}
+                                      </span>{' '}
+                                      <span className="font-mono text-[11px] text-stone-500">
+                                        ({st.email.split('@')[0]})
+                                      </span>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <span className="text-stone-500">headcc@iisermohali.ac.in</span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+
+            {/* Section 1: Faculty In-Charge (Head of Computer Centre) */}
+            <section className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between pb-3 border-b border-[#D8D5CD] gap-2">
+                <div>
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
+                    Part I · Administration &amp; Leadership
+                  </p>
+                  <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
+                    Faculty In-Charge (Head, Computer Centre)
                   </h2>
                 </div>
                 <span className="text-xs text-[#6E7781] font-mono">
-                  Informatics Centre · Room 201, First Floor
+                  Informatics Centre (Central Library Building) · +91-172-2240266
                 </span>
               </div>
 
@@ -354,49 +456,116 @@ export default function HomePage() {
               )}
             </section>
 
-            {/* Section 2: Entire Staff Team Overview */}
-            <section className="space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-[#D8D5CD]">
-                <div>
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
-                    Section II · Systems, Networking & User Support Division
-                  </p>
-                  <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
-                    Computer Centre Officers & Technical Staff
-                  </h2>
-                  <p className="text-xs sm:text-sm text-[#4A5568] mt-0.5">
-                    Scientific officers, network engineers, and systems administrators maintaining campus IT operations.
-                  </p>
+            {/* Section 2: Senior Technical Officer & CISO */}
+            {seniorOfficers.length > 0 && (
+              <section className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-[#D8D5CD]">
+                  <div>
+                    <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
+                      Part II · Cyber Security, Data Center &amp; Resource Planning
+                    </p>
+                    <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
+                      Senior Technical Officer &amp; CISO
+                    </h2>
+                  </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setCurrentTab('directory')}
-                  className="text-xs font-semibold text-[#0D1B2A] hover:text-[#9E3B24] flex items-center gap-1.5 self-start sm:self-end pb-0.5 cursor-pointer"
-                >
-                  <span>Search & Filter by Technical Task</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+                <div className="space-y-4">
+                  {seniorOfficers.map((staff) => (
+                    <StaffCard
+                      key={staff.id}
+                      staff={staff}
+                      fullWidth={true}
+                      isOnDutyToday={staff.workingDays.includes(todayDay)}
+                      isAdmin={currentUser?.role === 'admin'}
+                      onEdit={() => setCurrentTab('admin')}
+                      onSelectResponsibility={(title) => {
+                        setGlobalSearch(title);
+                        setCurrentTab('directory');
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {otherStaff.map((staff) => (
-                  <StaffCard
-                    key={staff.id}
-                    staff={staff}
-                    isOnDutyToday={staff.workingDays.includes(todayDay)}
-                    isAdmin={currentUser?.role === 'admin'}
-                    onEdit={() => setCurrentTab('admin')}
-                    onSelectResponsibility={(title) => {
-                      setGlobalSearch(title);
-                      setCurrentTab('directory');
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
+            {/* Section 3: Technical Assistants (Web, Network, ERP & LMS) */}
+            {technicalAssistants.length > 0 && (
+              <section className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-[#D8D5CD]">
+                  <div>
+                    <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
+                      Part III · Systems, Network, Web &amp; ERP Division
+                    </p>
+                    <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
+                      Technical Assistants &amp; System Administrators
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#4A5568] mt-0.5">
+                      Officers managing Web Applications, Campus Network, Google Workspace, Samarth/eSmarth ERP, and Moodle LMS.
+                    </p>
+                  </div>
 
-            {/* Section 3: Institutional Index Ledger */}
+                  <button
+                    type="button"
+                    onClick={() => setCurrentTab('directory')}
+                    className="text-xs font-semibold text-[#0D1B2A] hover:text-[#9E3B24] flex items-center gap-1.5 self-start sm:self-end pb-0.5 cursor-pointer"
+                  >
+                    <span>Search &amp; Filter All Staff</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {technicalAssistants.map((staff) => (
+                    <StaffCard
+                      key={staff.id}
+                      staff={staff}
+                      isOnDutyToday={staff.workingDays.includes(todayDay)}
+                      isAdmin={currentUser?.role === 'admin'}
+                      onEdit={() => setCurrentTab('admin')}
+                      onSelectResponsibility={(title) => {
+                        setGlobalSearch(title);
+                        setCurrentTab('directory');
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section 4: Lab, Library Server & Network Support Staff */}
+            {labAndSupportStaff.length > 0 && (
+              <section className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3 border-b border-[#D8D5CD]">
+                  <div>
+                    <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24] font-semibold">
+                      Part IV · Laboratories, Library Servers &amp; Field Operations
+                    </p>
+                    <h2 className="font-serif text-2xl font-bold text-[#0D1B2A] tracking-tight mt-0.5">
+                      Teaching Labs, KOHA/DSpace &amp; Network Support Staff
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {labAndSupportStaff.map((staff) => (
+                    <StaffCard
+                      key={staff.id}
+                      staff={staff}
+                      isOnDutyToday={staff.workingDays.includes(todayDay)}
+                      isAdmin={currentUser?.role === 'admin'}
+                      onEdit={() => setCurrentTab('admin')}
+                      onSelectResponsibility={(title) => {
+                        setGlobalSearch(title);
+                        setCurrentTab('directory');
+                      }}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Section 5: Institutional Index Ledger */}
             <section className="border-t border-[#D8D5CD] pt-8">
               <div className="grid grid-cols-1 md:grid-cols-3 border border-[#D8D5CD] bg-white divide-y md:divide-y-0 md:divide-x divide-[#D8D5CD]">
                 <button
@@ -408,11 +577,11 @@ export default function HomePage() {
                     Index 01 · Operational Roster
                   </p>
                   <h3 className="font-serif text-lg font-bold text-[#0D1B2A] group-hover:text-[#9E3B24] transition-colors flex items-center justify-between">
-                    <span>Weekly & Daily Duty Schedule</span>
+                    <span>Weekly &amp; Daily Duty Schedule</span>
                     <ArrowRight className="w-4 h-4 text-[#6E7781] group-hover:text-[#9E3B24]" />
                   </h3>
                   <p className="text-xs text-[#4A5568] leading-relaxed">
-                    Consult Monday–Sunday shift allocations, verify primary and backup engineering coverage, or print the official weekly roster.
+                    Consult Monday–Saturday shift allocations, verify primary and backup engineering coverage, or print the weekly roster.
                   </p>
                 </button>
 
@@ -425,11 +594,11 @@ export default function HomePage() {
                     Index 02 · Technical Divisions
                   </p>
                   <h3 className="font-serif text-lg font-bold text-[#0D1B2A] group-hover:text-[#9E3B24] transition-colors flex items-center justify-between">
-                    <span>Service & Task Catalogue</span>
+                    <span>Service &amp; Task Catalogue</span>
                     <ArrowRight className="w-4 h-4 text-[#6E7781] group-hover:text-[#9E3B24]" />
                   </h3>
                   <p className="text-xs text-[#4A5568] leading-relaxed">
-                    Detailed specifications for Campus Backbone &amp; Eduroam Wi-Fi, High Performance Computing (HPC), Academic ERP, and Linux Labs.
+                    Detailed specifications for Cyber Security (CISO), Data Center, Google Workspace, eSmarth ERP, Moodle LMS, and KOHA/DSpace.
                   </p>
                 </button>
 
@@ -439,14 +608,14 @@ export default function HomePage() {
                   className="p-6 text-left hover:bg-[#FAF9F5] transition-colors space-y-2 group cursor-pointer"
                 >
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#9E3B24]">
-                    Index 03 · Circulars & Downtime
+                    Index 03 · Circulars &amp; Notices
                   </p>
                   <h3 className="font-serif text-lg font-bold text-[#0D1B2A] group-hover:text-[#9E3B24] transition-colors flex items-center justify-between">
-                    <span>Maintenance & IT Advisories</span>
+                    <span>Maintenance &amp; IT Advisories</span>
                     <ArrowRight className="w-4 h-4 text-[#6E7781] group-hover:text-[#9E3B24]" />
                   </h3>
                   <p className="text-xs text-[#4A5568] leading-relaxed">
-                    Scheduled rack maintenance windows, firewall firmware upgrades, and security circulars issued by the Computer Centre.
+                    Official notices regarding the CC Ticketing System, CISO security guidelines, and scheduled server maintenance windows.
                   </p>
                 </button>
               </div>
@@ -601,10 +770,10 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11px] text-[#6E7781] gap-2">
             <p>
-              © 2026 Computer Centre, IISER Mohali. Official Internal Staff Directory &amp; Duty Register.
+              © 2026 Computer Centre, IISER Mohali. Official Staff Directory &amp; Operational Duty Register.
             </p>
             <p className="font-mono font-tabular text-[#0D1B2A]">
-              System Helpdesk: cc-support@iisermohali.ac.in · Internal Ext: +91-172-2240-1050 / 1054
+              Faculty In-Charge (Head CC): headcc@iisermohali.ac.in · Tel: +91-172-2240266 / 2240124
             </p>
           </div>
         </div>
