@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap");
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+    --iiser-ink: #0D1B2A;
+    --iiser-navy: #14283D;
+    --iiser-brick: #9E3B24;
+    --iiser-ochre: #9A6B13;
+    --iiser-paper: #F7F6F2;
+    --iiser-rule: #D8D5CD;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F7F6F2;
+    color: #182026;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, .font-editorial {
+    font-family: var(--font-serif);
+  }
+
+  .font-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media print {
+  header, nav, .no-print, button:not(.print-include) {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print-area {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .print-break-inside-avoid {
+    break-inside: avoid;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F6F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #C5C1B8;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8E8A80;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "IISER Mohali Computer Centre Portal",
+  "description": "Internal staff directory, duty schedules, technical responsibilities, and administrative portal for IISER Mohali.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,789 @@
+# PROJECT BRIEF: IISER MOHALI COMPUTER CENTRE — STAFF DIRECTORY & DUTY MANAGEMENT PORTAL
+
+## 1. Project Overview
+
+Design and develop a fully functional, secure, responsive, and professionally designed website for the **Computer Centre, Indian Institute of Science Education and Research (IISER) Mohali**.
+
+The website will serve as an internal administrative portal for the IISER Mohali community.
+
+Its central purpose is to maintain a comprehensive database of the Computer Centre team, including the Head of the Computer Centre and all staff members, their responsibilities, assigned duties, working schedules, and contact information.
+
+An authenticated user should be able to visit the website, search for a particular technical or administrative task, and immediately identify the staff member responsible for it on a particular day.
+
+The website must have two distinct levels of access:
+
+1. **Administrator (Head of Computer Centre):** Complete authority to add, remove, edit, and manage staff members and their assigned duties.
+2. **Regular IISER Community Member:** Read-only access to the staff directory, responsibilities, schedules, and duty assignments.
+
+This must be a real, functional web application, not merely a static website or UI prototype.
+
+---
+
+# 2. Visual Identity and Design Philosophy
+
+The website must have a strong IISER Mohali identity.
+
+Do not create a generic corporate dashboard. The visual experience should feel like an official institutional portal developed specifically for IISER Mohali.
+
+### A. Overall aesthetic
+
+Create a sophisticated combination of:
+
+- Modern university website design.
+- Minimalist administrative dashboard.
+- Professional institutional typography.
+- Subtle architectural photography.
+- Elegant animations and transitions.
+- Carefully balanced whitespace.
+- A distinctive IISER-inspired colour palette.
+
+Suggested palette:
+
+| Element | Suggested colour |
+|---|---|
+| Primary | Deep navy blue |
+| Secondary | Dark academic blue |
+| Accent | Warm golden yellow |
+| Background | Off-white / ivory |
+| Cards | White |
+| Text | Charcoal / dark grey |
+| Secondary text | Muted slate |
+
+Use colours inspired by IISER Mohali's institutional identity, without inventing or modifying the official logo.
+
+### B. IISER Mohali architectural identity
+
+The visual design should prominently incorporate the actual IISER Mohali campus.
+
+Use authentic photographs of:
+
+- IISER Mohali's main academic buildings.
+- The central library building.
+- The campus entrance.
+- Campus walkways and landscaped surroundings.
+- Other recognisable institutional architecture.
+
+Prioritise officially available IISER Mohali photographs and appropriately licensed images.
+
+The library building should be a particularly prominent visual element because it gives the portal an identifiable campus atmosphere.
+
+Do not use generic university stock photographs or photographs of unrelated IITs, IISERs, or universities.
+
+### C. Typography
+
+Use a sophisticated combination of fonts, such as:
+
+- Inter for general interface text.
+- Manrope for headings.
+- A refined serif font for selected institutional headings, if aesthetically appropriate.
+
+The design should look polished, restrained, and professional.
+
+Avoid excessive gradients, oversized rounded cards, unnecessary shadows, and flashy animations.
+
+---
+
+# 3. Authentication and Login System
+
+This is a restricted internal portal.
+
+Only members of the IISER Mohali community with valid institutional accounts should be able to access it.
+
+### A. Login page
+
+The first page encountered by a visitor must be a dedicated login page.
+
+Design it with:
+
+- IISER Mohali institutional branding.
+- Computer Centre identification.
+- An elegant photograph of the IISER Mohali campus or library.
+- Institutional login form.
+- A clear description: "An internal portal for the IISER Mohali community."
+
+The login form should contain:
+
+1. Institutional email address.
+2. Password (only if the officially approved authentication mechanism requires it).
+3. Sign-in button.
+4. Forgot password / institutional account assistance link, where applicable.
+
+Add a subtle message:
+
+"Access restricted to authorised members of IISER Mohali."
+
+### B. Institutional authentication — CRITICAL REQUIREMENT
+
+The application must integrate with the actual IISER Mohali institutional authentication infrastructure.
+
+Do not implement an artificial login system that accepts arbitrary email addresses and passwords.
+
+Before implementing authentication, investigate:
+
+1. Whether IISER Mohali provides an official Single Sign-On (SSO) service.
+2. Whether the institute supports OAuth 2.0 / OpenID Connect.
+3. Whether SAML-based authentication is available.
+4. Whether the Computer Centre provides an approved LDAP or other institutional directory integration.
+5. Whether the institute has an API or authentication service intended for internal applications.
+
+Contact or request the necessary technical documentation from the institute's Computer Centre/IT administrator if these details are not publicly available.
+
+**Preferred implementation:** Use the official institutional SSO mechanism, with the authentication flow handled by the institute's identity provider.
+
+The application must:
+
+- Redirect users to the genuine institutional authentication provider.
+- Verify the returned identity securely on the backend.
+- Validate the issuer, audience, signature, expiry, and other relevant authentication claims.
+- Verify that the authenticated email belongs to an officially approved IISER Mohali email domain or institutional account.
+- Create an application session only after successful verification.
+- Support secure logout and session expiration.
+
+If the institute does not offer SSO but provides an officially authorised authentication API or LDAP integration, use that mechanism only after receiving permission and technical documentation.
+
+**Security restrictions:**
+
+- Never ask users to submit their IISER password to an unofficial third-party login form.
+- Never store institutional passwords in the application's database.
+- Never scrape or reverse-engineer the IISER Mohali login page.
+- Never attempt to authenticate against the public IISER website as though it were an identity provider.
+- Never assume an email domain alone proves ownership of an account.
+
+If an official authentication integration cannot be established, implement a clearly labelled development/demo authentication mode, but do not represent it as verified IISER authentication. Do not deploy the application as an authenticated institutional service until the integration is approved.
+
+### C. Role-based authentication
+
+After authentication, determine the user's permissions using a secure backend role system.
+
+There are two roles:
+
+**Role 1: Head of Computer Centre (Administrator)**
+
+The Head must be identified using an explicitly configured, verified institutional email address or an institution-approved identity/role attribute.
+
+The administrator's email must be configured server-side, not entered or selected by the user.
+
+Only the authorised Head should receive administrative privileges.
+
+**Role 2: Regular IISER Community Member**
+
+All other authenticated and authorised IISER members receive read-only access.
+
+Do not allow users to modify their own roles or promote themselves to administrator.
+
+---
+
+# 4. Main Dashboard — Computer Centre Team
+
+After successful login, users should land on the main Computer Centre dashboard.
+
+This is the central page of the application.
+
+### A. Header/navigation
+
+Create a clean navigation bar containing:
+
+- IISER Mohali logo.
+- Computer Centre.
+- Home.
+- Staff Directory.
+- Duty Schedule.
+- Responsibilities.
+- About.
+- User profile.
+- Logout.
+
+For the Head, display an additional option:
+
+- Administration / Manage Portal.
+
+### B. Welcome section
+
+Include a visually attractive introductory section:
+
+"Computer Centre — IISER Mohali"
+
+Subtitle:
+
+"Your directory to the people, responsibilities and technical support services that keep our campus connected."
+
+Use a subtle campus photograph, preferably featuring the library or academic buildings.
+
+### C. Team overview
+
+Display the entire Computer Centre team in a visually organised manner.
+
+The Head of the Computer Centre must have a distinct profile at the top.
+
+Below the Head, display all staff members.
+
+Each staff member should have an individual profile card containing:
+
+- Photograph (if available).
+- Full name.
+- Official designation.
+- Department/section.
+- Official institutional email.
+- Contact number, if authorised for display.
+- Primary responsibilities.
+- Secondary responsibilities.
+- Assigned working days.
+- Current duty status.
+
+Use professional profile cards, with consistent dimensions and typography.
+
+If photographs are unavailable, use elegant initials-based profile placeholders.
+
+Do not fabricate employee names, photographs, designations, or contact details. Populate the initial database only with information supplied or verified by the institute.
+
+---
+
+# 5. Staff Directory and Search Functionality
+
+This is one of the most important features.
+
+An ordinary user must be able to find the appropriate staff member without manually inspecting every profile.
+
+### A. Search bar
+
+Add a prominent search bar:
+
+"Search for a task, service, staff member or responsibility..."
+
+The search must support:
+
+- Staff member names.
+- Designations.
+- Technical responsibilities.
+- Administrative duties.
+- Equipment and infrastructure.
+- Assigned tasks.
+- Keywords and related terms.
+
+For example, if someone searches for:
+
+- Wi-Fi connectivity
+- Internet problems
+- Network configuration
+- Computer laboratory
+- Printer issues
+- Server maintenance
+- Software installation
+- Email problems
+- Hardware troubleshooting
+- Website maintenance
+
+The application should return the staff members assigned to the relevant responsibilities.
+
+A search for a task should ideally show:
+
+1. Task name.
+2. Responsible staff member.
+3. Secondary/reserve staff member, if assigned.
+4. Relevant working days.
+5. Contact details.
+6. Any relevant instructions or escalation procedure.
+
+Implement database-backed search with appropriate indexing.
+
+If semantic search is added, it should supplement rather than replace exact keyword matching.
+
+### B. Filters
+
+Provide filters for:
+
+- Day of the week.
+- Staff member.
+- Department/section.
+- Task category.
+- Primary or secondary responsibility.
+
+Users should be able to combine filters.
+
+### C. Task-specific results
+
+When a user clicks a responsibility, open a detailed view showing:
+
+- Description of the task.
+- Primary person responsible.
+- Backup person.
+- Assigned days.
+- Working hours, if specified.
+- Contact information.
+- Relevant notes.
+
+If no staff member is assigned to a task, display:
+
+"No staff member currently assigned to this responsibility. Please contact the Head of the Computer Centre."
+
+---
+
+# 6. Duty Schedule
+
+Create a dedicated page called "Duty Schedule".
+
+This page should provide a clear overview of who is responsible for what and on which days.
+
+### A. Weekly schedule
+
+Display a weekly schedule from Monday to Sunday.
+
+Use a clean table or calendar-style interface.
+
+Suggested structure:
+
+| Day | Staff Member | Assigned Responsibility | Time |
+|---|---|---|---|
+| Monday | Staff A | Network maintenance | As assigned |
+| Tuesday | Staff B | Laboratory support | As assigned |
+| Wednesday | Staff C | Server monitoring | As assigned |
+
+These are illustrative entries only. Actual data must be provided by the administrator.
+
+### B. Daily view
+
+Allow users to select a particular day.
+
+For example, selecting Wednesday should display all staff members and duties assigned for Wednesday.
+
+### C. Staff-centric view
+
+Allow users to select a staff member and see:
+
+- All their assigned responsibilities.
+- Their weekly schedule.
+- Their primary duties.
+- Their additional duties.
+
+### D. Duty assignment rules
+
+A staff member may:
+
+- Have multiple duties on one day.
+- Have the same duty on multiple days.
+- Share a responsibility with another staff member.
+- Have a primary and secondary responsibility.
+- Have different duties on different days.
+
+The database must support all these possibilities.
+
+### E. Conflict detection
+
+When the administrator assigns duties, the system should detect potential scheduling conflicts.
+
+For example:
+
+- A staff member assigned to two overlapping duties.
+- A task with no primary responsible person.
+- A task without backup coverage, if backup coverage is required by the administrator.
+
+Display a warning, but do not prohibit legitimate assignments.
+
+---
+
+# 7. Administrator Dashboard — Head of Computer Centre
+
+This is the administrative control centre of the application.
+
+Only the verified Head of the Computer Centre should be able to access it.
+
+The administrator should have complete control over the staff directory and duty allocation.
+
+Create a separate, polished administrative dashboard.
+
+### A. Staff management
+
+Provide the following functionality:
+
+**Add a staff member**
+
+The administrator should be able to add a new employee through a form containing:
+
+- Full name.
+- Official designation.
+- Institutional email address.
+- Contact number.
+- Department/section.
+- Profile photograph.
+- Joining date, if required.
+- Primary responsibilities.
+- Additional responsibilities.
+- Working days.
+- Working hours.
+- Other relevant notes.
+
+**Edit a staff member**
+
+Allow the administrator to update all relevant information.
+
+**Remove a staff member**
+
+Allow the administrator to remove a staff member from the active directory.
+
+Prefer archiving/deactivation over permanent deletion so that historical duty assignments remain intact.
+
+### B. Duty assignment management
+
+Create an intuitive interface for assigning responsibilities.
+
+The Head should be able to:
+
+1. Select a staff member.
+2. Select an existing responsibility or create a new one.
+3. Select one or multiple days.
+4. Specify working hours, if applicable.
+5. Assign primary or secondary responsibility.
+6. Add relevant instructions.
+7. Save the assignment.
+
+Provide an option to edit or delete assignments.
+
+### C. Task management
+
+The Head should also be able to:
+
+- Create new responsibility categories.
+- Modify existing task descriptions.
+- Assign multiple people to a task.
+- Designate a primary and backup person.
+- Reassign duties.
+- Temporarily suspend a responsibility.
+- Archive obsolete tasks.
+
+### D. Dashboard statistics
+
+Show useful administrative information:
+
+- Total number of active staff members.
+- Number of assigned responsibilities.
+- Number of duties assigned today.
+- Number of unassigned tasks.
+- Number of scheduling conflicts.
+- Recently modified assignments.
+
+### E. Change history
+
+Maintain an audit log of administrative changes.
+
+Record:
+
+- Administrator who performed the action.
+- Date and time.
+- Previous value.
+- New value.
+- Nature of the modification.
+
+This is important for institutional accountability.
+
+---
+
+# 8. Database and Backend Architecture
+
+Build this as a full-stack application with a proper relational database.
+
+Suggested technology stack:
+
+**Frontend**
+- Next.js / React.
+- TypeScript.
+- Tailwind CSS.
+- Framer Motion for restrained animations.
+- Lucide icons.
+
+**Backend**
+- Next.js server-side API routes or a separate secure backend.
+- PostgreSQL database.
+- Prisma ORM or an equivalent database abstraction.
+
+**Authentication**
+- Official IISER Mohali SSO, preferably OIDC or SAML, subject to institutional availability and authorisation.
+
+**Hosting**
+- Prefer IISER Mohali's approved institutional hosting infrastructure.
+- If institutional hosting is unavailable, use an institution-approved deployment environment after obtaining permission.
+
+Do not assume that the public IISER website server permits third-party applications or direct database access.
+
+### Suggested database entities
+
+Create the following tables:
+
+**1. Users**
+- id
+- institutional_email
+- authentication_provider_id
+- role
+- created_at
+- last_login
+
+**2. Staff**
+- id
+- full_name
+- designation
+- department
+- email
+- phone
+- photograph_url
+- status
+- joining_date
+
+**3. Responsibilities**
+- id
+- title
+- description
+- category
+- status
+
+**4. Duty Assignments**
+- id
+- staff_id
+- responsibility_id
+- day_of_week
+- start_time
+- end_time
+- assignment_type (primary/secondary)
+- notes
+- effective_from
+- effective_until
+
+**5. Audit Logs**
+- id
+- administrator_id
+- action
+- entity_type
+- entity_id
+- old_value
+- new_value
+- timestamp
+
+Design the database so that one staff member can have multiple assignments and one responsibility can have multiple staff members.
+
+Use appropriate foreign keys, constraints, indexes, and transactions.
+
+---
+
+# 9. Security Requirements
+
+Security is a mandatory requirement, not an optional enhancement.
+
+Implement:
+
+- Secure institutional authentication.
+- Backend-enforced role-based access control.
+- HTTPS.
+- Secure, HttpOnly, SameSite session cookies.
+- CSRF protection where applicable.
+- Input validation and sanitisation.
+- Protection against SQL injection.
+- Rate limiting for authentication-related endpoints.
+- Secure session expiration and logout.
+- Protection against unauthorised API requests.
+- Server-side validation of administrator privileges.
+- Secure handling of photographs and uploaded files.
+- Database backups.
+- Audit logging.
+
+The frontend must never be trusted to enforce administrative permissions.
+
+A user must not be able to become an administrator by modifying browser storage, local state, request parameters, or API payloads.
+
+Do not place authentication secrets, database credentials, or API keys in frontend code or public repositories.
+
+---
+
+# 10. Additional Functional Features
+
+Include the following features to make the portal genuinely useful.
+
+### A. Quick Contact
+
+Every staff profile should have an option to copy their official email address.
+
+If contact information is authorised for display, provide appropriate contact links.
+
+### B. Print-friendly schedule
+
+Allow users to print or export the weekly duty schedule as a PDF.
+
+### C. Mobile responsiveness
+
+The entire application must work smoothly on:
+
+- Desktop computers.
+- Laptops.
+- Tablets.
+- Smartphones.
+
+The desktop experience should prioritise information density, while the mobile interface should use responsive cards and collapsible sections.
+
+### D. Announcements
+
+Allow the Head to publish important Computer Centre announcements.
+
+Regular users should be able to view them.
+
+### E. Last updated indicator
+
+Show when the staff directory and duty schedule were last updated.
+
+### F. Empty states
+
+If the database has not yet been populated, display a professional message explaining that the directory is awaiting official staff information.
+
+Never populate the production application with fictional staff records.
+
+---
+
+# 11. UI/UX Pages and Navigation Flow
+
+Implement the following pages:
+
+| Page | Access |
+|---|---|
+| Login | Public login entry |
+| Home / Dashboard | Authenticated users |
+| Staff Directory | Authenticated users |
+| Individual Staff Profile | Authenticated users |
+| Duty Schedule | Authenticated users |
+| Responsibility Directory | Authenticated users |
+| Task Details | Authenticated users |
+| Announcements | Authenticated users |
+| Administrator Dashboard | Head only |
+| Add Staff | Head only |
+| Edit Staff | Head only |
+| Manage Duties | Head only |
+| Manage Responsibilities | Head only |
+| Audit History | Head only |
+
+### Expected navigation flow
+
+**Regular user:**
+
+Login → Institutional authentication → Main Dashboard → Search task / Browse staff → View responsible staff member and assigned days.
+
+**Head of Computer Centre:**
+
+Login → Institutional authentication → Administrator Dashboard → Add/Edit Staff → Assign Duties → Save Changes → Updated information becomes visible to all authorised users.
+
+---
+
+# 12. Design Details and Microinteractions
+
+Pay attention to the details that distinguish a professional institutional website from an ordinary CRUD application.
+
+Implement:
+
+- Smooth page transitions.
+- Subtle hover effects on staff cards.
+- Elegant loading skeletons.
+- Animated search results, used sparingly.
+- Clearly distinguishable administrator controls.
+- Responsive navigation.
+- Well-designed confirmation dialogs.
+- Toast notifications after successful updates.
+- Clear error messages.
+- Consistent spacing and typography.
+
+The interface should be visually impressive without sacrificing usability.
+
+The campus photographs should complement the information rather than overwhelm it.
+
+---
+
+# 13. Initial Data and Deployment
+
+Do not invent the names or responsibilities of actual IISER Mohali Computer Centre employees.
+
+The application should initially contain an empty or explicitly labelled demonstration database.
+
+Provide a secure mechanism for the Head to populate the database.
+
+If official staff information is publicly available, it may be used only after verification and with appropriate permission.
+
+Before deployment:
+
+1. Obtain the necessary institutional authorisation.
+2. Confirm the approved authentication mechanism.
+3. Obtain permission to use institutional branding and photographs.
+4. Confirm the hosting environment.
+5. Configure the authorised administrator account.
+6. Test authentication and permissions.
+7. Test the database backup and recovery process.
+
+The final website should be deployable on an IISER-approved server.
+
+---
+
+# 14. Mandatory Testing and Acceptance Criteria
+
+Do not consider the project complete merely because the pages look attractive.
+
+Test the following scenarios:
+
+**Authentication**
+1. An authorised IISER account can sign in.
+2. An unauthorised external account cannot access the portal.
+3. An expired or invalid session cannot access protected pages.
+4. Logging out terminates the application session.
+
+**Permissions**
+5. The Head can access the administrator dashboard.
+6. Regular users cannot access administrator pages.
+7. Regular users cannot modify staff information through direct API requests.
+8. A user cannot promote themselves to administrator.
+
+**Staff management**
+9. The Head can add a staff member.
+10. The Head can edit a staff member.
+11. The Head can deactivate a staff member.
+12. Changes appear correctly in the regular user directory.
+
+**Duty management**
+13. The Head can assign multiple duties to one staff member.
+14. The Head can assign one responsibility to multiple staff members.
+15. Users can filter duties by day.
+16. Users can search by task and identify the responsible employee.
+17. Scheduling conflicts are appropriately flagged.
+18. Changes to duty assignments are reflected immediately.
+
+**Reliability**
+19. Data remains available after logout and subsequent login.
+20. Multiple users can access the application simultaneously.
+21. Historical assignments remain available after staff deactivation.
+22. The interface works across desktop and mobile devices.
+
+---
+
+# 15. Final Deliverables
+
+Produce:
+
+1. Complete frontend source code.
+2. Complete backend source code.
+3. Database schema and migrations.
+4. Authentication integration.
+5. Role-based permission system.
+6. Administrator dashboard.
+7. Staff directory.
+8. Duty scheduling and task search.
+9. Audit logging.
+10. Setup and deployment documentation.
+11. Environment variable template (.env.example), without actual secrets.
+12. Automated tests.
+13. Instructions for connecting the application to the officially approved IISER Mohali authentication and hosting infrastructure.
+
+### Important implementation instruction
+
+Work systematically.
+
+First establish the project architecture and authentication feasibility. Then implement the database and backend permissions, followed by the frontend.
+
+Do not build a visually complete but functionally fake application.
+
+If institutional authentication credentials, API documentation, SSO metadata, server access, or administrator details are unavailable, explicitly identify what is missing. Do not fabricate an integration or claim that institutional authentication works when it has not been tested.
+
+The final objective is to deliver a production-quality internal Computer Centre portal that IISER Mohali can actually adopt, maintain, and use.
+
+**Design philosophy:** An elegant, recognisably IISER Mohali institutional experience, backed by a secure and reliable administrative system.
+
+**Core principle:** Any member of the IISER community should be able to find the right Computer Centre staff member for a particular task in a matter of seconds.
